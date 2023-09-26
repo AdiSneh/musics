@@ -32,12 +32,15 @@ def generate_chords(scale: Scale, amount: int) -> list[str]:
     ]
 
 
-def parse_scale(scale: str) -> Scale:
+def parse_scale(scale: str) -> Scale | None:
     scale_regex = re.compile("(?P<note>.*?)(?P<minor_suffix>m)?")
     match_dict = scale_regex.fullmatch(scale).groupdict()
     note = match_dict["note"]
     mode = Mode.MINOR if match_dict["minor_suffix"] else Mode.MAJOR
-    return Scale(note, mode)
+    try:
+        return Scale(note, mode)
+    except ValueError:
+        return None
 
 
 def get_scale_name(scale: Scale) -> str:
@@ -51,7 +54,9 @@ def main():
         correct_answers = [scale, scale.relative_key()]
         chords = generate_chords(scale, amount=4)
         guess = input(f"What scale is this: {', '.join(chords)}\n")
-        while parse_scale(guess) not in correct_answers:
+        while (parsed_guess := parse_scale(guess)) not in correct_answers:
+            if parsed_guess is None:
+                print("Your guess must be in the format C/Cm.")
             guess = input("Try again...\n")
         print("Correct!")
         correct_answers_text = ", ".join(get_scale_name(scale) for scale in correct_answers)
