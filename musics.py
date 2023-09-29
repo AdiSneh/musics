@@ -59,8 +59,10 @@ def main():
                 print("Your guess must be in the format C/Cm.")
             guess = input("Try again...\n")
         print("Correct!")
-        correct_answers_text = ", ".join(get_scale_name(scale) for scale in correct_answers)
-        print(f"Correct answers: {correct_answers_text}")
+        notes_in_scale_text = ", ".join([n.name for n in scale.notes])
+        print(f"Notes in scale: {notes_in_scale_text}")
+        possible_answers_text = ", ".join(get_scale_name(scale) for scale in correct_answers)
+        print(f"Possible answers: {possible_answers_text}", end="\n\n")
 
 
 if __name__ == '__main__':
